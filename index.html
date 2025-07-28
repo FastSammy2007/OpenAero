@@ -1,1 +1,939 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenAero - Open-Source Aerospace for All</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+primary: '#00F0FF',
+secondary: '#6B4BFF'
+},
+borderRadius: {
+'none': '0px',
+'sm': '4px',
+DEFAULT: '8px',
+'md': '12px',
+'lg': '16px',
+'xl': '20px',
+'2xl': '24px',
+'3xl': '32px',
+'full': '9999px',
+'button': '8px'
+}
+}
+}
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<style>
+:where([class^="ri-"])::before {
+content: "\f3c2";
+}
+body {
+font-family: 'Inter', sans-serif;
+background: #0A0A0A;
+color: #F4F4F4;
+}
+.fade-on-scroll {
+opacity: 0;
+transform: translateY(20px);
+transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.fade-on-scroll.visible {
+opacity: 1;
+transform: translateY(0);
+}
+.starfield {
+position: absolute;
+width: 100%;
+height: 100%;
+background: radial-gradient(ellipse at center, rgba(107, 75, 255, 0.1) 0%, transparent 70%),
+radial-gradient(ellipse at 80% 20%, rgba(0, 240, 255, 0.05) 0%, transparent 50%);
+}
+.starfield::before {
+content: '';
+position: absolute;
+width: 100%;
+height: 100%;
+background-image:
+radial-gradient(2px 2px at 20px 30px, #F4F4F4, transparent),
+radial-gradient(2px 2px at 40px 70px, rgba(0, 240, 255, 0.8), transparent),
+radial-gradient(1px 1px at 90px 40px, #F4F4F4, transparent),
+radial-gradient(1px 1px at 130px 80px, rgba(107, 75, 255, 0.6), transparent),
+radial-gradient(2px 2px at 160px 30px, #F4F4F4, transparent);
+background-repeat: repeat;
+background-size: 200px 100px;
+animation: sparkle 20s linear infinite;
+}
+@keyframes sparkle {
+from { transform: translateX(0); }
+to { transform: translateX(-200px); }
+}
+.fade-in {
+animation: fadeIn 1s ease-out;
+}
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(30px); }
+to { opacity: 1; transform: translateY(0); }
+}
+.hover-float:hover {
+transform: translateY(-8px);
+transition: transform 0.3s ease;
+}
+.code-block {
+background: rgba(10, 10, 10, 0.8);
+border: 1px solid rgba(107, 75, 255, 0.3);
+font-family: 'JetBrains Mono', monospace;
+}
+.navbar-blur {
+backdrop-filter: blur(10px);
+background: rgba(10, 10, 10, 0.8);
+}
+.card-hover:hover {
+transform: translateY(-4px) scale(1.02);
+box-shadow: 0 20px 40px rgba(0, 240, 255, 0.1);
+}
+.gradient-text {
+background: linear-gradient(135deg, #00F0FF, #6B4BFF);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+</style>
+</head>
+<body>
+<nav class="fixed top-0 w-full z-50 transition-all duration-300" id="navbar">
+<div class="max-w-7xl mx-auto px-6 py-4">
+<div class="flex items-center justify-between">
+<div class="text-2xl font-bold gradient-text">OpenAero</div>
+<div class="hidden md:flex items-center space-x-8">
+<a href="#projects" class="text-gray-300 hover:text-primary transition-colors">Projects</a>
+<a href="#tutorials" class="text-gray-300 hover:text-primary transition-colors">Tutorials</a>
+<a href="#datasets" class="text-gray-300 hover:text-primary transition-colors">Datasets</a>
+<a href="#community" class="text-gray-300 hover:text-primary transition-colors">Community</a>
+<button class="bg-secondary text-white px-6 py-2 !rounded-button hover:bg-opacity-80 transition-all whitespace-nowrap">
+Join Mission
+</button>
+</div>
+<button class="md:hidden text-white" id="mobile-menu-btn">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-menu-line ri-lg"></i>
+</div>
+</button>
+</div>
+</div>
+</nav>
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+<div class="starfield"></div>
+<div class="absolute inset-0" style="background-image: url('https://readdy.ai/api/search-image?query=deep%20space%20nebula%20with%20purple%20and%20blue%20cosmic%20clouds%2C%20stars%20scattered%20across%20dark%20void%2C%20ethereal%20cosmic%20background%2C%20space%20exploration%20theme%2C%20high%20contrast%2C%20cinematic%20lighting%2C%20vast%20universe%2C%20astronomical%20photography%20style%2C%20dark%20matter%20visualization&width=1920&height=1080&seq=hero1&orientation=landscape'); background-size: cover; background-position: center; opacity: 0.6;"></div>
+<div class="relative z-10 text-center max-w-4xl mx-auto px-6 fade-in">
+<h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+OpenAero: <span class="gradient-text">Open-Source</span><br>
+Aerospace for All
+</h1>
+<p class="text-xl md:text-2xl text-gray-300 mb-12 font-light">
+Explore. Build. Share.
+</p>
+<div class="flex flex-col sm:flex-row gap-6 justify-center">
+<button class="bg-primary text-black px-8 py-4 !rounded-button font-semibold hover:bg-opacity-90 transition-all text-lg whitespace-nowrap">
+Explore Projects
+</button>
+<button class="border-2 border-primary text-primary px-8 py-4 !rounded-button font-semibold hover:bg-primary hover:text-black transition-all text-lg whitespace-nowrap">
+Join the Mission
+</button>
+</div>
+</div>
+<div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-mouse-line ri-lg text-gray-400"></i>
+</div>
+</div>
+</section>
+<section class="py-20 px-6 bg-gradient-to-b from-black to-gray-900">
+<div class="max-w-7xl mx-auto">
+<div class="grid md:grid-cols-5 gap-12 items-center">
+<div class="md:col-span-3">
+<h2 class="text-4xl md:text-5xl font-bold mb-8">
+Democratizing <span class="gradient-text">Aerospace</span> Innovation
+</h2>
+<div class="space-y-6 text-lg text-gray-300">
+<div class="flex items-start space-x-4">
+<div class="w-6 h-6 flex items-center justify-center mt-1">
+<i class="ri-rocket-line text-primary"></i>
+</div>
+<p>Community-driven platform connecting aerospace enthusiasts, students, and professionals worldwide</p>
+</div>
+<div class="flex items-start space-x-4">
+<div class="w-6 h-6 flex items-center justify-center mt-1">
+<i class="ri-database-line text-primary"></i>
+</div>
+<p>Open-source datasets, simulation tools, and educational resources for aerospace experimentation</p>
+</div>
+<div class="flex items-start space-x-4">
+<div class="w-6 h-6 flex items-center justify-center mt-1">
+<i class="ri-team-line text-primary"></i>
+</div>
+<p>Collaborative environment where knowledge sharing accelerates innovation and learning</p>
+</div>
+</div>
+</div>
+<div class="md:col-span-2">
+<div class="relative">
+<img src="https://readdy.ai/api/search-image?query=futuristic%20aerospace%20engineering%20workspace%20with%20holographic%20displays%2C%20satellite%20components%2C%20rocket%20blueprints%2C%20modern%20laboratory%20setting%2C%20clean%20white%20background%2C%20high-tech%20visualization%2C%20engineering%20tools%2C%20space%20technology%20development&width=600&height=400&seq=about1&orientation=landscape"
+alt="Aerospace Innovation"
+class="w-full h-80 object-cover rounded-xl shadow-2xl">
+<div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent rounded-xl"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="projects" class="py-20 px-6 bg-gray-900">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-16">
+<h2 class="text-4xl md:text-5xl font-bold mb-6">Featured <span class="gradient-text">Projects</span></h2>
+<p class="text-xl text-gray-300 max-w-3xl mx-auto">
+Discover cutting-edge aerospace projects built by our community
+</p>
+</div>
+<div class="grid md:grid-cols-2 gap-8">
+<div class="bg-black bg-opacity-50 rounded-xl p-8 border border-gray-800 hover-float card-hover transition-all duration-300">
+<div class="mb-6">
+<img src="https://readdy.ai/api/search-image?query=remote%20control%20glider%20aircraft%20with%20modular%20swappable%20wings%2C%20aerodynamic%20design%2C%20white%20background%2C%20engineering%20prototype%2C%20clean%20product%20photography%2C%20aerospace%20model%2C%20technical%20illustration%20style&width=400&height=250&seq=project1&orientation=landscape"
+alt="RC Glider"
+class="w-full h-48 object-cover rounded-lg">
+</div>
+<h3 class="text-2xl font-bold mb-4 text-primary">RC Glider (Swappable Wings)</h3>
+<p class="text-gray-300 mb-6">
+Modular remote-controlled glider with interchangeable wing designs for aerodynamic testing and educational purposes.
+</p>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="bg-secondary bg-opacity-20 text-secondary px-3 py-1 rounded-full text-sm">Arduino</span>
+<span class="bg-secondary bg-opacity-20 text-secondary px-3 py-1 rounded-full text-sm">3D Printing</span>
+<span class="bg-secondary bg-opacity-20 text-secondary px-3 py-1 rounded-full text-sm">Aerodynamics</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-4 text-sm text-gray-400">
+<div class="flex items-center space-x-1">
+<div class="w-4 h-4 flex items-center justify-center">
+<i class="ri-star-line"></i>
+</div>
+<span>247</span>
+</div>
+<div class="flex items-center space-x-1">
+<div class="w-4 h-4 flex items-center justify-center">
+<i class="ri-git-branch-line"></i>
+</div>
+<span>52</span>
+</div>
+</div>
+<button class="text-primary hover:text-white transition-colors">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-external-link-line"></i>
+</div>
+</button>
+</div>
+</div>
+<div class="bg-black bg-opacity-50 rounded-xl p-8 border border-gray-800 hover-float card-hover transition-all duration-300">
+<div class="mb-6">
+<img src="https://readdy.ai/api/search-image?query=IMU%20GPS%20flight%20data%20logger%20electronic%20device%2C%20circuit%20board%20with%20sensors%2C%20aerospace%20instrumentation%2C%20technical%20hardware%20photography%2C%20clean%20white%20background%2C%20precision%20engineering%20components&width=400&height=250&seq=project2&orientation=landscape"
+alt="Flight Logger"
+class="w-full h-48 object-cover rounded-lg">
+</div>
+<h3 class="text-2xl font-bold mb-4 text-primary">IMU + GPS Flight Logger</h3>
+<p class="text-gray-300 mb-6">
+High-precision flight data logging system combining inertial measurement unit and GPS for comprehensive flight analysis.
+</p>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="bg-secondary bg-opacity-20 text-secondary px-3 py-1 rounded-full text-sm">Python</span>
+<span class="bg-secondary bg-opacity-20 text-secondary px-3 py-1 rounded-full text-sm">Sensors</span>
+<span class="bg-secondary bg-opacity-20 text-secondary px-3 py-1 rounded-full text-sm">Data Analysis</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-4 text-sm text-gray-400">
+<div class="flex items-center space-x-1">
+<div class="w-4 h-4 flex items-center justify-center">
+<i class="ri-star-line"></i>
+</div>
+<span>189</span>
+</div>
+<div class="flex items-center space-x-1">
+<div class="w-4 h-4 flex items-center justify-center">
+<i class="ri-git-branch-line"></i>
+</div>
+<span>34</span>
+</div>
+</div>
+<button class="text-primary hover:text-white transition-colors">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-external-link-line"></i>
+</div>
+</button>
+</div>
+</div>
+<div class="bg-black bg-opacity-50 rounded-xl p-8 border border-gray-800 hover-float card-hover transition-all duration-300">
+<div class="mb-6">
+<img src="https://readdy.ai/api/search-image?query=NACA%20airfoil%20cross-section%20visualization%2C%20aerodynamic%20simulation%20graphics%2C%20computational%20fluid%20dynamics%20visualization%2C%20scientific%20data%20visualization%2C%20clean%20technical%20illustration%2C%20aerospace%20engineering%20graphics&width=400&height=250&seq=project3&orientation=landscape"
+alt="NACA Simulations"
+class="w-full h-48 object-cover rounded-lg">
+</div>
+<h3 class="text-2xl font-bold mb-4 text-primary">NACA Airfoil Simulations</h3>
+<p class="text-gray-300 mb-6">
+Interactive computational fluid dynamics simulations for analyzing NACA airfoil performance characteristics.
+</p>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="bg-secondary bg-opacity-20 text-secondary px-3 py-1 rounded-full text-sm">JavaScript</span>
+<span class="bg-secondary bg-opacity-20 text-secondary px-3 py-1 rounded-full text-sm">WebGL</span>
+<span class="bg-secondary bg-opacity-20 text-secondary px-3 py-1 rounded-full text-sm">CFD</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-4 text-sm text-gray-400">
+<div class="flex items-center space-x-1">
+<div class="w-4 h-4 flex items-center justify-center">
+<i class="ri-star-line"></i>
+</div>
+<span>312</span>
+</div>
+<div class="flex items-center space-x-1">
+<div class="w-4 h-4 flex items-center justify-center">
+<i class="ri-git-branch-line"></i>
+</div>
+<span>78</span>
+</div>
+</div>
+<button class="text-primary hover:text-white transition-colors">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-external-link-line"></i>
+</div>
+</button>
+</div>
+</div>
+<div class="bg-black bg-opacity-50 rounded-xl p-8 border border-gray-800 hover-float card-hover transition-all duration-300">
+<div class="mb-6">
+<img src="https://readdy.ai/api/search-image?query=dataset%20visualization%20dashboard%20with%20charts%20and%20graphs%2C%20aerospace%20data%20analytics%20interface%2C%20scientific%20data%20exploration%20tool%2C%20modern%20UI%20design%2C%20clean%20interface%2C%20data%20visualization%20graphics&width=400&height=250&seq=project4&orientation=landscape"
+alt="Dataset Explorer"
+class="w-full h-48 object-cover rounded-lg">
+</div>
+<h3 class="text-2xl font-bold mb-4 text-primary">Dataset Explorer</h3>
+<p class="text-gray-300 mb-6">
+Comprehensive tool for exploring, visualizing, and analyzing aerospace datasets with interactive filtering capabilities.
+</p>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="bg-secondary bg-opacity-20 text-secondary px-3 py-1 rounded-full text-sm">React</span>
+<span class="bg-secondary bg-opacity-20 text-secondary px-3 py-1 rounded-full text-sm">D3.js</span>
+<span class="bg-secondary bg-opacity-20 text-secondary px-3 py-1 rounded-full text-sm">Analytics</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-4 text-sm text-gray-400">
+<div class="flex items-center space-x-1">
+<div class="w-4 h-4 flex items-center justify-center">
+<i class="ri-star-line"></i>
+</div>
+<span>156</span>
+</div>
+<div class="flex items-center space-x-1">
+<div class="w-4 h-4 flex items-center justify-center">
+<i class="ri-git-branch-line"></i>
+</div>
+<span>29</span>
+</div>
+</div>
+<button class="text-primary hover:text-white transition-colors">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-external-link-line"></i>
+</div>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="tutorials" class="py-20 px-6 bg-black">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-16">
+<h2 class="text-4xl md:text-5xl font-bold mb-6">Tutorials & <span class="gradient-text">Documentation</span></h2>
+<p class="text-xl text-gray-300 max-w-3xl mx-auto">
+Learn aerospace engineering through hands-on tutorials and comprehensive guides
+</p>
+</div>
+<div class="grid lg:grid-cols-4 gap-8">
+<div class="lg:col-span-1">
+<div class="bg-gray-900 rounded-xl p-6 sticky top-24">
+<h3 class="text-lg font-semibold mb-4 text-primary">Categories</h3>
+<div class="space-y-2" id="tutorial-categories">
+<button class="w-full text-left px-4 py-2 rounded-lg bg-primary bg-opacity-20 text-primary" data-category="getting-started">
+Getting Started
+</button>
+<button class="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-800 text-gray-300 transition-colors" data-category="flight-dynamics">
+Flight Dynamics
+</button>
+<button class="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-800 text-gray-300 transition-colors" data-category="propulsion">
+Propulsion Systems
+</button>
+<button class="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-800 text-gray-300 transition-colors" data-category="data-analysis">
+Data Analysis
+</button>
+<button class="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-800 text-gray-300 transition-colors" data-category="simulation">
+Simulation Tools
+</button>
+</div>
+</div>
+</div>
+<div class="lg:col-span-3">
+<div class="bg-gray-900 rounded-xl p-8" id="tutorial-content">
+<div id="getting-started-content">
+<h3 class="text-2xl font-bold mb-6">Setting Up Your First Aerospace Project</h3>
+<p class="text-gray-300 mb-8">
+Learn how to set up a complete aerospace development environment and create your first simulation project.
+</p>
+<div class="space-y-6">
+<div>
+<h4 class="text-lg font-semibold mb-4 text-primary">1. Environment Setup</h4>
+<div class="code-block rounded-lg p-4 relative">
+<button class="absolute top-2 right-2 text-gray-400 hover:text-white transition-colors">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-file-copy-line"></i>
+</div>
+</button>
+<pre class="text-sm text-gray-300"><code># Install required dependencies
+pip install numpy scipy matplotlib
+pip install aerospace-toolkit
+# Clone the OpenAero repository
+git clone https://github.com/openaero/toolkit.git
+cd toolkit</code></pre>
+</div>
+</div>
+<div>
+<h4 class="text-lg font-semibold mb-4 text-primary">2. Basic Flight Simulation</h4>
+<div class="code-block rounded-lg p-4 relative">
+<button class="absolute top-2 right-2 text-gray-400 hover:text-white transition-colors">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-file-copy-line"></i>
+</div>
+</button>
+<pre class="text-sm text-gray-300"><code>import aerospace_toolkit as aero
+# Initialize flight parameters
+aircraft = aero.Aircraft(
+mass=1200,  # kg
+wing_area=16.2,  # m²
+aspect_ratio=9.5
+)
+# Run simulation
+trajectory = aircraft.simulate_flight(
+initial_altitude=1000,
+duration=300
+)</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div id="flight-dynamics-content" class="hidden">
+<h3 class="text-2xl font-bold mb-6">Understanding Flight Dynamics</h3>
+<p class="text-gray-300 mb-8">
+Master the fundamental principles of aerodynamics and aircraft motion in flight.
+</p>
+<div class="space-y-6">
+<div>
+<h4 class="text-lg font-semibold mb-4 text-primary">1. Lift and Drag Calculations</h4>
+<div class="code-block rounded-lg p-4 relative">
+<button class="absolute top-2 right-2 text-gray-400 hover:text-white transition-colors">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-file-copy-line"></i>
+</div>
+</button>
+<pre class="text-sm text-gray-300"><code>import aero_dynamics as ad
+# Calculate lift coefficient
+cl = ad.calculate_lift_coefficient(
+angle_of_attack=5,  # degrees
+reynolds_number=1e6,
+mach_number=0.2
+)
+# Calculate drag coefficient
+cd = ad.calculate_drag_coefficient(
+lift_coefficient=cl,
+aspect_ratio=8.5,
+oswald_efficiency=0.85
+)</code></pre>
+</div>
+</div>
+<div>
+<h4 class="text-lg font-semibold mb-4 text-primary">2. Flight Control Systems</h4>
+<div class="code-block rounded-lg p-4 relative">
+<button class="absolute top-2 right-2 text-gray-400 hover:text-white transition-colors">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-file-copy-line"></i>
+</div>
+</button>
+<pre class="text-sm text-gray-300"><code>from flight_controls import PIDController
+# Initialize attitude controller
+attitude_controller = PIDController(
+kp=2.5,  # proportional gain
+ki=0.05,  # integral gain
+kd=1.2   # derivative gain
+)
+# Update control surfaces
+elevator_angle = attitude_controller.compute(
+setpoint=5,     # desired pitch angle
+measurement=4.2 # current pitch angle
+)</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="flex items-center space-x-4">
+<button class="bg-primary text-black px-6 py-2 !rounded-button font-semibold hover:bg-opacity-90 transition-all whitespace-nowrap">
+View on GitHub
+</button>
+<button class="text-primary hover:text-white transition-colors">
+Next Tutorial
+<div class="w-4 h-4 inline-flex items-center justify-center ml-2">
+<i class="ri-arrow-right-line"></i>
+</div>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="datasets" class="py-20 px-6 bg-gray-900">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-16">
+<h2 class="text-4xl md:text-5xl font-bold mb-6">Dataset <span class="gradient-text">Viewer</span></h2>
+<p class="text-xl text-gray-300 max-w-3xl mx-auto">
+Explore comprehensive aerospace datasets with interactive visualization tools
+</p>
+</div>
+<div class="bg-black bg-opacity-50 rounded-xl p-8 border border-gray-800">
+<div class="flex flex-col lg:flex-row gap-6 mb-8">
+<div class="flex-1">
+<div class="relative">
+<input type="text"
+placeholder="Search datasets..."
+class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 pl-12 text-white focus:outline-none focus:border-primary">
+<div class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 flex items-center justify-center">
+<i class="ri-search-line text-gray-400"></i>
+</div>
+</div>
+</div>
+<div class="flex gap-4">
+<select class="bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary pr-8">
+<option>All Categories</option>
+<option>Flight Data</option>
+<option>Weather</option>
+<option>Aircraft Performance</option>
+</select>
+<button class="bg-primary text-black px-6 py-3 !rounded-button font-semibold hover:bg-opacity-90 transition-all whitespace-nowrap">
+<div class="w-5 h-5 inline-flex items-center justify-center mr-2">
+<i class="ri-download-line"></i>
+</div>
+Export CSV
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full">
+<thead>
+<tr class="border-b border-gray-700">
+<th class="text-left py-4 px-4 text-gray-300 font-semibold">Dataset Name</th>
+<th class="text-left py-4 px-4 text-gray-300 font-semibold">Type</th>
+<th class="text-left py-4 px-4 text-gray-300 font-semibold">Size</th>
+<th class="text-left py-4 px-4 text-gray-300 font-semibold">Updated</th>
+<th class="text-left py-4 px-4 text-gray-300 font-semibold">Actions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-b border-gray-800 hover:bg-gray-800 transition-colors">
+<td class="py-4 px-4">
+<div>
+<div class="font-semibold text-white">Boeing 737 Flight Performance</div>
+<div class="text-sm text-gray-400">Commercial aircraft operational data</div>
+</div>
+</td>
+<td class="py-4 px-4 text-gray-300">Flight Data</td>
+<td class="py-4 px-4 text-gray-300">2.4 GB</td>
+<td class="py-4 px-4 text-gray-300">2 days ago</td>
+<td class="py-4 px-4">
+<div class="flex space-x-2">
+<button class="text-primary hover:text-white transition-colors">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-eye-line"></i>
+</div>
+</button>
+<button class="text-primary hover:text-white transition-colors">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-download-line"></i>
+</div>
+</button>
+</div>
+</td>
+</tr>
+<tr class="border-b border-gray-800 hover:bg-gray-800 transition-colors">
+<td class="py-4 px-4">
+<div>
+<div class="font-semibold text-white">Atmospheric Conditions Archive</div>
+<div class="text-sm text-gray-400">Historical weather data for flight planning</div>
+</div>
+</td>
+<td class="py-4 px-4 text-gray-300">Weather</td>
+<td class="py-4 px-4 text-gray-300">1.8 GB</td>
+<td class="py-4 px-4 text-gray-300">1 week ago</td>
+<td class="py-4 px-4">
+<div class="flex space-x-2">
+<button class="text-primary hover:text-white transition-colors">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-eye-line"></i>
+</div>
+</button>
+<button class="text-primary hover:text-white transition-colors">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-download-line"></i>
+</div>
+</button>
+</div>
+</td>
+</tr>
+<tr class="border-b border-gray-800 hover:bg-gray-800 transition-colors">
+<td class="py-4 px-4">
+<div>
+<div class="font-semibold text-white">Rocket Engine Test Results</div>
+<div class="text-sm text-gray-400">Thrust and efficiency measurements</div>
+</div>
+</td>
+<td class="py-4 px-4 text-gray-300">Propulsion</td>
+<td class="py-4 px-4 text-gray-300">856 MB</td>
+<td class="py-4 px-4 text-gray-300">3 days ago</td>
+<td class="py-4 px-4">
+<div class="flex space-x-2">
+<button class="text-primary hover:text-white transition-colors">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-eye-line"></i>
+</div>
+</button>
+<button class="text-primary hover:text-white transition-colors">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-download-line"></i>
+</div>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="community" class="py-20 px-6 bg-black">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-16">
+<h2 class="text-4xl md:text-5xl font-bold mb-6">Join Our <span class="gradient-text">Community</span></h2>
+<p class="text-xl text-gray-300 max-w-3xl mx-auto">
+Connect with aerospace enthusiasts, share knowledge, and collaborate on groundbreaking projects
+</p>
+</div>
+<div class="grid md:grid-cols-3 gap-8 mb-16">
+<div class="text-center">
+<div class="text-4xl font-bold gradient-text mb-2" id="contributors-count">1,247</div>
+<div class="text-gray-300">Active Contributors</div>
+</div>
+<div class="text-center">
+<div class="text-4xl font-bold gradient-text mb-2" id="projects-count">89</div>
+<div class="text-gray-300">Open Source Projects</div>
+</div>
+<div class="text-center">
+<div class="text-4xl font-bold gradient-text mb-2" id="datasets-count">156</div>
+<div class="text-gray-300">Shared Datasets</div>
+</div>
+</div>
+<div class="grid lg:grid-cols-2 gap-12">
+<div>
+<h3 class="text-2xl font-bold mb-8">Top Contributors</h3>
+<div class="space-y-6">
+<div class="flex items-center space-x-4 bg-gray-900 rounded-xl p-6">
+<div class="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center text-black font-bold">
+AK
+</div>
+<div class="flex-1">
+<div class="font-semibold text-white">Alex Kumar</div>
+<div class="text-sm text-gray-400">Propulsion Systems Expert</div>
+</div>
+<div class="text-right">
+<div class="text-primary font-semibold">127 commits</div>
+<div class="text-xs text-gray-400">This month</div>
+</div>
+</div>
+<div class="flex items-center space-x-4 bg-gray-900 rounded-xl p-6">
+<div class="w-12 h-12 bg-gradient-to-br from-secondary to-primary rounded-full flex items-center justify-center text-white font-bold">
+MR
+</div>
+<div class="flex-1">
+<div class="font-semibold text-white">Maria Rodriguez</div>
+<div class="text-sm text-gray-400">Flight Dynamics Researcher</div>
+</div>
+<div class="text-right">
+<div class="text-primary font-semibold">98 commits</div>
+<div class="text-xs text-gray-400">This month</div>
+</div>
+</div>
+<div class="flex items-center space-x-4 bg-gray-900 rounded-xl p-6">
+<div class="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center text-black font-bold">
+JC
+</div>
+<div class="flex-1">
+<div class="font-semibold text-white">James Chen</div>
+<div class="text-sm text-gray-400">Data Science Specialist</div>
+</div>
+<div class="text-right">
+<div class="text-primary font-semibold">76 commits</div>
+<div class="text-xs text-gray-400">This month</div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<h3 class="text-2xl font-bold mb-8">Recent Activity</h3>
+<div class="space-y-4">
+<div class="bg-gray-900 rounded-xl p-6">
+<div class="flex items-start space-x-3">
+<div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+<div>
+<div class="text-white font-medium">New dataset: Supersonic Wind Tunnel Results</div>
+<div class="text-sm text-gray-400 mt-1">Contributed by Sarah Johnson • 2 hours ago</div>
+</div>
+</div>
+</div>
+<div class="bg-gray-900 rounded-xl p-6">
+<div class="flex items-start space-x-3">
+<div class="w-2 h-2 bg-secondary rounded-full mt-2 flex-shrink-0"></div>
+<div>
+<div class="text-white font-medium">Updated: NACA Airfoil Simulation Tool</div>
+<div class="text-sm text-gray-400 mt-1">Enhanced by David Park • 5 hours ago</div>
+</div>
+</div>
+</div>
+<div class="bg-gray-900 rounded-xl p-6">
+<div class="flex items-start space-x-3">
+<div class="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+<div>
+<div class="text-white font-medium">New tutorial: Rocket Trajectory Optimization</div>
+<div class="text-sm text-gray-400 mt-1">Published by Michael Foster • 1 day ago</div>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-8">
+<button class="w-full bg-secondary text-white py-4 !rounded-button font-semibold hover:bg-opacity-80 transition-all whitespace-nowrap">
+<div class="w-5 h-5 inline-flex items-center justify-center mr-2">
+<i class="ri-discord-fill"></i>
+</div>
+Join Discord Community
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<footer class="bg-black border-t border-gray-800 py-16 px-6">
+<div class="max-w-7xl mx-auto">
+<div class="grid md:grid-cols-4 gap-8 mb-12">
+<div>
+<div class="text-2xl font-bold gradient-text mb-4">OpenAero</div>
+<p class="text-gray-400 mb-6">
+Democratizing aerospace innovation through open-source collaboration and knowledge sharing.
+</p>
+<div class="flex space-x-4">
+<a href="#" class="text-gray-400 hover:text-primary transition-colors">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-github-fill"></i>
+</div>
+</a>
+<a href="#" class="text-gray-400 hover:text-primary transition-colors">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-linkedin-fill"></i>
+</div>
+</a>
+<a href="#" class="text-gray-400 hover:text-primary transition-colors">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-twitter-fill"></i>
+</div>
+</a>
+</div>
+</div>
+<div>
+<h4 class="font-semibold text-white mb-4">Resources</h4>
+<div class="space-y-3">
+<a href="#" class="block text-gray-400 hover:text-primary transition-colors">Documentation</a>
+<a href="#" class="block text-gray-400 hover:text-primary transition-colors">API Reference</a>
+<a href="#" class="block text-gray-400 hover:text-primary transition-colors">Tutorials</a>
+<a href="#" class="block text-gray-400 hover:text-primary transition-colors">Examples</a>
+</div>
+</div>
+<div>
+<h4 class="font-semibold text-white mb-4">Community</h4>
+<div class="space-y-3">
+<a href="#" class="block text-gray-400 hover:text-primary transition-colors">Discord</a>
+<a href="#" class="block text-gray-400 hover:text-primary transition-colors">GitHub</a>
+<a href="#" class="block text-gray-400 hover:text-primary transition-colors">Discussions</a>
+<a href="#" class="block text-gray-400 hover:text-primary transition-colors">Contributors</a>
+</div>
+</div>
+<div>
+<h4 class="font-semibold text-white mb-4">Stay Updated</h4>
+<p class="text-gray-400 mb-4">Get the latest updates on new projects and features.</p>
+<div class="flex gap-2">
+<input type="email"
+placeholder="Enter your email"
+class="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-primary">
+<button class="bg-secondary text-white px-4 py-2 !rounded-button font-semibold hover:bg-opacity-80 transition-all whitespace-nowrap">
+Subscribe
+</button>
+</div>
+</div>
+</div>
+<div class="border-t border-primary border-opacity-20 pt-8">
+<div class="flex flex-col md:flex-row justify-between items-center">
+<div class="text-gray-400 text-sm">
+© 2024 OpenAero. All rights reserved.
+</div>
+<div class="flex space-x-6 mt-4 md:mt-0">
+<a href="#" class="text-gray-400 hover:text-primary transition-colors text-sm">Privacy Policy</a>
+<a href="#" class="text-gray-400 hover:text-primary transition-colors text-sm">Terms of Service</a>
+<a href="#" class="text-gray-400 hover:text-primary transition-colors text-sm">Contact</a>
+</div>
+</div>
+</div>
+</div>
+</footer>
+<script id="navbar-scroll">
+document.addEventListener('DOMContentLoaded', function() {
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', function() {
+if (window.scrollY > 50) {
+navbar.classList.add('navbar-blur');
+} else {
+navbar.classList.remove('navbar-blur');
+}
+});
+});
+</script>
+<script id="mobile-menu">
+document.addEventListener('DOMContentLoaded', function() {
+const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+mobileMenuBtn.addEventListener('click', function() {
+// Mobile menu functionality can be implemented here
+console.log('Mobile menu clicked');
+});
+});
+</script>
+<script id="tutorial-switcher">
+document.addEventListener('DOMContentLoaded', function() {
+const tutorialCategories = document.getElementById('tutorial-categories');
+const tutorialContent = document.getElementById('tutorial-content');
+function updateActiveCategory(clickedButton) {
+const buttons = tutorialCategories.querySelectorAll('button');
+buttons.forEach(button => {
+button.classList.remove('bg-primary', 'bg-opacity-20', 'text-primary');
+button.classList.add('hover:bg-gray-800', 'text-gray-300');
+});
+clickedButton.classList.remove('hover:bg-gray-800', 'text-gray-300');
+clickedButton.classList.add('bg-primary', 'bg-opacity-20', 'text-primary');
+}
+function showContent(categoryId) {
+const contents = tutorialContent.querySelectorAll('[id$="-content"]');
+contents.forEach(content => {
+content.classList.add('hidden');
+});
+const selectedContent = document.getElementById(`${categoryId}-content`);
+if (selectedContent) {
+selectedContent.classList.remove('hidden');
+}
+}
+tutorialCategories.addEventListener('click', function(e) {
+const button = e.target.closest('button');
+if (button) {
+const category = button.getAttribute('data-category');
+updateActiveCategory(button);
+showContent(category);
+}
+});
+});
+</script>
+<script id="counter-animation">
+document.addEventListener('DOMContentLoaded', function() {
+function animateCounter(element, target) {
+let current = 0;
+const increment = target / 100;
+const timer = setInterval(() => {
+current += increment;
+if (current >= target) {
+current = target;
+clearInterval(timer);
+}
+element.textContent = Math.floor(current).toLocaleString();
+}, 20);
+}
+const observer = new IntersectionObserver((entries) => {
+entries.forEach(entry => {
+if (entry.isIntersecting) {
+const contributorsEl = document.getElementById('contributors-count');
+const projectsEl = document.getElementById('projects-count');
+const datasetsEl = document.getElementById('datasets-count');
+animateCounter(contributorsEl, 1247);
+animateCounter(projectsEl, 89);
+animateCounter(datasetsEl, 156);
+observer.unobserve(entry.target);
+}
+});
+});
+const communitySection = document.getElementById('community');
+if (communitySection) {
+observer.observe(communitySection);
+}
+});
+</script>
+<script id="smooth-scroll">
+document.addEventListener('DOMContentLoaded', function() {
+const links = document.querySelectorAll('a[href^="#"]');
+links.forEach(link => {
+link.addEventListener('click', function(e) {
+e.preventDefault();
+const targetId = this.getAttribute('href');
+const targetSection = document.querySelector(targetId);
+if (targetSection) {
+targetSection.scrollIntoView({
+behavior: 'smooth',
+block: 'start'
+});
+}
+});
+});
+const fadeElements = document.querySelectorAll('section > div > div:not(.starfield)');
+fadeElements.forEach(element => {
+element.classList.add('fade-on-scroll');
+});
+const observerOptions = {
+threshold: 0.2,
+rootMargin: '0px 0px -50px 0px'
+};
+const fadeObserver = new IntersectionObserver((entries) => {
+entries.forEach(entry => {
+if (entry.isIntersecting) {
+entry.target.classList.add('visible');
+}
+});
+}, observerOptions);
+fadeElements.forEach(element => {
+fadeObserver.observe(element);
+});
+});
+</script>
+</body>
+</html>
